@@ -1,8 +1,6 @@
 package api
 
 import (
-	"database/sql"
-
 	"gorm.io/gorm"
 
 	db "github.com/ZaressaR/Capstone/db/sqlc"
@@ -12,11 +10,11 @@ import (
 // Medication represents a row in medication table.
 
 type Server struct {
-	RX     *sql.DB
+	RX     *db.RX
 	router *gin.Engine
 }
 
-func NewServer(rx *sql.DB) *Server {
+func NewServer(rx *db.RX) *Server {
 	server := &Server{RX: rx}
 	router := gin.Default()
 

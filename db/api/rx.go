@@ -16,11 +16,9 @@ type createPatientInput struct {
 }
 
 func (server *Server) createPatientProfile(c *gin.Context) {
-
 	var input createPatientInput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 	arg := db.CreatePatientParams{
@@ -29,29 +27,26 @@ func (server *Server) createPatientProfile(c *gin.Context) {
 	}
 	patient, err := server.RX.CreatePatient(c.Request.Context(), arg)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(200, patient)
+	c.JSON(http.StatusOK, patient)
 }
 
-func (server *Server) createMedicationProfile(c *gin.Context) {
-
+func (server *Server) createMedication(c *gin.Context) {
 	var input createPatientInput
-
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	arg2 := db.CreateMedicationParams{
+	arg := db.CreateMedicationParams{
 		RxName:       input.RxName,
 		Administered: input.Administered,
 	}
-
-	medication, err := server.CreateMedication(c.Request.Context(), arg2)
+	medication, err := server.RX.CreateMedication(c.Request.Context(), arg)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(200, medication)
+	c.JSON(http.StatusOK, medication)
 }

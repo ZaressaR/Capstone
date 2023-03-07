@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"html/template"
 	"log"
-	"strings"
 	"time"
 
 	db "github.com/ZaressaR/Capstone/db/sqlc"
@@ -50,14 +49,14 @@ func main() {
 
 	r.POST("/patient", func(c *gin.Context) {
 		rxname := c.PostForm("rxname")
-		rxname = strings.Replace(rxname, " ", "", -1)
 		firstName := c.PostForm("firstName")
 		lastName := c.PostForm("lastName")
-		//admissionDate := c.PostForm("admissionDate")
+		administeredStr := c.PostForm("administered")
+		administered, err := time.Parse("Monday", administeredStr)
 
 		medication := db.CreateMedicationParams{
 			RxName:       rxname,
-			Administered: time.Now(),
+			Administered: administered,
 		}
 		medicationRecord, err := rx.CreateMedication(ctx, medication)
 		if err != nil {
@@ -73,11 +72,10 @@ func main() {
 			c.AbortWithError(500, err)
 			return
 		}
-		c.HTML(200, "success.gohtml", medicationRecord)
-		c.HTML(200, "success.gohtml", patientRecord)
-	})
-	r.GET("/success", func(c *gin.Context) {
-		c.HTML(200, "success.gohtml", nil)
+		r.GET("/success", func(c *gin.Context) {
+			c.HTML(200, "success.gohtml", medicationRecord)
+			c.HTML(200, "success.gohtml", patientRecord)
+		})
 	})
 
 	if err := r.Run(serverAddress); err != nil {
