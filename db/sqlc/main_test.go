@@ -18,6 +18,7 @@ const (
 
 var ctx = context.Background()
 var testQueries *Queries
+var testDB *sql.DB
 
 func TestMain(m *testing.M) {
 	testdb, err := sql.Open(dbDriver, dbSource)

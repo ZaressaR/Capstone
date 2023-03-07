@@ -8,15 +8,17 @@ import (
 	"strings"
 	"time"
 
+	db "github.com/ZaressaR/Capstone/db/sqlc"
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/lib/pq"
 )
 
 const (
-	dbDriver = "postgres"
-	dbSource = "postgresql:///patient_profile?sslmode=disable"
-	dbName   = "patient_profile"
+	dbDriver      = "postgres"
+	dbSource      = "postgresql:///patient_profile?sslmode=disable"
+	dbName        = "patient_profile"
+	serverAddress = "localhost:8080"
 )
 
 var ctx = context.Background()
@@ -31,7 +33,7 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot connect to db: ", err)
 	}
-	defer conn.Close()
+	rx := db.NewRX(conn)
 
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
@@ -57,16 +59,16 @@ func main() {
 			RxName:       rxname,
 			Administered: time.Now(),
 		}
-		medicationRecord, err := db.CreateMedication(ctx, medication)
+		medicationRecord, err := rx.CreateMedication(ctx, medication)
 		if err != nil {
 			c.AbortWithError(500, err)
 			return
 		}
-
-		patientRecord, err := db.CreatePatient(ctx, db.CreatePatientParams{
+		patient := db.CreatePatientParams{
 			FirstName: firstName,
 			LastName:  lastName,
-		})
+		}
+		patientRecord, err := rx.CreatePatient(ctx, patient)
 		if err != nil {
 			c.AbortWithError(500, err)
 			return
@@ -74,9 +76,12 @@ func main() {
 		c.HTML(200, "success.gohtml", medicationRecord)
 		c.HTML(200, "success.gohtml", patientRecord)
 	})
-	r.Run(":8080")
-	if err := r.Run(":8080"); err != nil {
-		log.Fatal(err)
+	r.GET("/success", func(c *gin.Context) {
+		c.HTML(200, "success.gohtml", nil)
+	})
+
+	if err := r.Run(serverAddress); err != nil {
+		log.Fatal("cannot start server:", err)
 	}
 
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createPatientProfile(t *testing.T) (Patient, error) {
+func createPatientProfile(t *testing.T) Patient {
 	arg := CreatePatientParams{
 		FirstName: "",
 		LastName:  "",
@@ -18,7 +18,7 @@ func createPatientProfile(t *testing.T) (Patient, error) {
 	require.Equal(t, arg.FirstName, patient.FirstName)
 	require.Equal(t, arg.LastName, patient.LastName)
 
-	return patient, err
+	return patient
 
 }
 
@@ -26,9 +26,18 @@ func createPatientProfile(t *testing.T) (Patient, error) {
 // 	createPatientProfile(t)
 // }
 
-func TestGetPatient(t *testing.T) {
-	patient, err := createPatientProfile(t)
-	require.NoError(t, err)
-	require.NotEmpty(t, patient)
+// func TestGetPatient(t *testing.T) {
+// 	patient := createPatientProfile(t)
 
+// 	patient.PatientID = 1
+
+// 	patient1, err := testQueries.GetPatient(ctx, patient.PatientID)
+
+// 	require.NoError(t, err)
+// 	require.NotEmpty(t, patient)
+
+// }
+
+func TestCreatePatientProfile(t *testing.T) {
+	createPatientProfile(t)
 }

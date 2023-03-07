@@ -10,7 +10,7 @@ import (
 func createMedicationProfile(t *testing.T) Medication {
 	arg := CreateMedicationParams{
 		RxName:       "",
-		Administered: time.Time{},
+		Administered: time.Weekday(0),
 	}
 	medication, err := testQueries.CreateMedication(ctx, arg)
 	require.NoError(t, err)
@@ -20,5 +20,10 @@ func createMedicationProfile(t *testing.T) Medication {
 	require.Equal(t, arg.Administered, medication.Administered)
 
 	return medication
+
+}
+
+func TestCreateMedicationProfile(t *testing.T) {
+	createMedicationProfile(t)
 
 }
