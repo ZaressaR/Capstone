@@ -20,6 +20,10 @@ func NewServer(rx *db.RX) *Server {
 
 	router.GET("/", server.createPatientProfile)
 	router.POST("/patient", server.createPatientProfile)
+	router.POST("/medicationList", server.createMedication)
+	router.POST("/medication", server.createMedication)
+	router.GET("/medication", server.createMedication)
+	router.DELETE("/patient/firstName", server.deletePatient)
 
 	server.router = router
 	return server
@@ -45,6 +49,9 @@ func setupRoutes(r *gin.Engine, db *gorm.DB) {
 	r.LoadHTMLGlob("templates/*.gohtml")
 	r.GET("/", patientGetHandler)
 	r.POST("/patient", patientPostHandler)
+	r.POST("/medication", HandlerFunc)
+	r.DELETE("/patient", patientPostHandler)
+
 	// r.Use(connectDB(db)
 	// r.GET("/patients", getPatients)
 	// r.GET("/patients/:id", getPatient)
@@ -70,4 +77,26 @@ func patientPostHandler(c *gin.Context) {
 
 func patientGetHandler(c *gin.Context) {
 	c.HTML(200, "index.gohtml", gin.H{})
+}
+
+// func medicationPostHandler(c *gin.Context) {
+// 	person := &db.CreateMedicationParams{}
+// 	if err := c.ShouldBindJSON(person); err != nil {
+// 		c.JSON(400, errorRespone(err))
+// 		return
+// 	}
+// 	c.JSON(200, person)
+// }
+
+func HandlerFunc(c *gin.Context) {
+	data := []db.Medication{}
+
+	medicationData := []db.MedicationData{}
+	for _, m := range data {
+		md := m.Data()
+
+		medicationData = append(medicationData, md)
+	}
+	c.JSON(200, medicationData)
+
 }

@@ -1,204 +1,38 @@
-<div class="container">
-<div class="center">
-  <div class="left">
-    <div class="header">
-      <h2 class="animation a1">RX ROUTINE APP</h2>
-      <h4 class="animation a2">NEVER MISS ANOTHER DOSE</h4>
-    </div>
+<!--index.html-->
 
-<form method="POST" action="/patient">
- <label for="firstName">Enter: </label>
-  <input type="text" class="form-field animation a3" name="firstName" placeholder="First name"><br>
-    
-    <label for="lastName">Enter: </label>
- <input type="text" class="form-field animation a4" name="lastName" placeholder="Last name"><br>
+<!--Embed the login.gohtml template-->
 
-<label for="rxname">Name of: </label>
-  <input type="text" class="form-field animation a5" id="rxname" name="rxname" placeholder="Medication">
-  <br>
-  
-  <label for="date">Scheduled for: </label>
-  <input type="date" class="form-field animation a6" id="date" name="administered">
-  <br>
-  <button class="animation a7">Submit</button>
-   </div>
-  </div>
-  <div class="right"></div>
-</div>
-</form>
+{{template "login.gohtml" .}}
 
 
+<!--Embed the medicationList.gohtml template-->
 
-<head>
-<style>
-* { box-sizing: border-box; }
-@import url('https://fonts.googleapis.com/css?family=Rubik:400,500&display=swap');
+{{template "medicationList.gohtml" .}}
 
 
-body {
-.center {
-  font-family: 'Rubik', sans-serif;
-  
-  min-width:250px;
-  max-width: 500px;
-  margin: 20px;
-  border: 15px rgba(0,0,0,.1) solid;
-  padding: 50px;
-  background-color: #f5f5f5;
-  background-image: url(data:image/jpeg;base64,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);
+<!--Loop over the payload variable, which is a slice of strings, and display the medication name-->
+<!--Create a table to display the medication list-->
+{{range .payload}}
+  <a href="medication/{{.}}"> 
+  <!--Display the medication name-->
+  <h2>{{.}}</h2>
+  </a>
+{{end}}
 
-  
- }
+<!--Create a button to add a new medication-->
+<a href="medication/new">
+  <button type="button" class="btn btn-primary">Add New Medication</button>
+</a>
 
-}
+<!--Create a button to go back to the patient list-->
+<a href="/patient">
+  <button type="button" class="btn btn-primary">Back to Patient List</button>
+</a>
 
 
-
-.container {
-  display: flex;
-  height: 100vh;
  
-}
-
-.left {
-  overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
-  animation-name: left;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-delay: 1s;
-}
-
-.right {
-  flex: 1;
-  background-color: black;
-  transition: 1s;
-  background-image: url(https://i.pinimg.com/originals/21/db/af/21dbafaa997a625e4dcb3804326b2011.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 
 
 
-.header > h2 {
-  margin: 0;
-  color: #4f46a5;
-}
 
-.header > h4 {
-  margin-top: 10px;
-  font-weight: normal;
-  font-size: 20px;
-  color: rgba(0,0,0,.4);
-}
 
-.form {
-  max-width: 80%;
-  display: flex;
-  flex-direction: column;
-}
-
-.form > p {
-  text-align: right;
-}
-
-.form > p > a {
-  color: #000;
-  font-size: 14px;
-}
-
-.form-field {
-  height: 46px;
-  padding: 0 16px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-family: 'Rubik', sans-serif;
-  outline: 0;
-  transition: .2s;
-  margin-top: 20px;
-}
-
-.form-field:focus {
-  border-color: #0f7ef1;
-}
-
-.form > button {
-  padding: 12px 10px;
-  border: 0;
-  background: linear-gradient(to right, #de48b5 0%,#0097ff 100%); 
-  border-radius: 3px;
-  margin-top: 10px;
-  color: rgba(0,0,0,.4)
-  letter-spacing: 4px;
-  font-family: 'Rubik', sans-serif;
-}
-
-.animation {
-  animation-name: move;
-  animation-duration: .4s;
-  animation-fill-mode: both;
-  animation-delay: 2s;
-}
-
-.a1 {
-  animation-delay: 2s;
-}
-
-.a2 {
-  animation-delay: 2.1s;
-}
-
-.a3 {
-  animation-delay: 2.2s;
-}
-
-.a4 {
-  animation-delay: 2.3s;
-}
-
-.a5 {
-  animation-delay: 2.4s;
-}
-
-.a6 {
-  animation-delay: 2.5s;
-}
-.a7
-  animation-delay: 2.5s;
-}
-.a8 {
-  animation-delay: 2.6s;
-}
-
-@keyframes move {
-  0% {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-40px);
-  }
-
-  100% {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-}
-
-@keyframes left {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-   100% {
-    opacity: 1;
-    padding: 20px 40px;
-    width: 440px;
-  }
-}
-</style>
-</head>
-<body>

@@ -50,3 +50,21 @@ func (server *Server) createMedication(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, medication)
 }
+
+func (server *Server) deletePatient(c *gin.Context) {
+	var input createPatientInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	arg := db.DeletePatientParams{
+		FirstName: input.FirstName,
+		LastName:  input.LastName,
+	}
+	err := server.RX.DeletePatient(c.Request.Context(), arg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, "Patient Deleted")
+}

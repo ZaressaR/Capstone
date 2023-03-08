@@ -5,3 +5,7 @@ INSERT INTO patient(
 )VALUES(
     $1, $2
 ) RETURNING *;
+
+
+-- name: DeletePatient :exec
+DELETE FROM patient WHERE first_name = $1;

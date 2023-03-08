@@ -41,3 +41,15 @@ func createPatientProfile(t *testing.T) Patient {
 func TestCreatePatientProfile(t *testing.T) {
 	createPatientProfile(t)
 }
+
+func TestDeletePatient(t *testing.T) {
+	arg := DeletePatientParams{
+		FirstName: "",
+		LastName:  "",
+	}
+
+	err := testQueries.DeletePatient(ctx, arg)
+
+	require.NoError(t, err)
+
+}
