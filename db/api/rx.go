@@ -12,9 +12,10 @@ type createPatientInput struct {
 	FirstName    string    `json:"firstName" binding:"required"`
 	LastName     string    `json:"lastName" binding:"required"`
 	RxName       string    `json:"rxname" binding:"required"`
-	Administered time.Time `form: "administered" binding:"required" time_format:"weekday"`
+	Administered time.Time `json:"administered" binding:"required"`
 }
 
+// server that handles all the requests to create the patient profile
 func (server *Server) createPatientProfile(c *gin.Context) {
 	var input createPatientInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -52,16 +53,9 @@ func (server *Server) createMedication(c *gin.Context) {
 }
 
 func (server *Server) deletePatient(c *gin.Context) {
-	var input createPatientInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, err)
-		return
-	}
-	arg := db.DeletePatientParams{
-		FirstName: input.FirstName,
-		LastName:  input.LastName,
-	}
-	err := server.RX.DeletePatient(c.Request.Context(), arg)
+	firstName := c.Param("firstName")
+
+	err := server.RX.DeletePatient(c.Request.Context(), firstName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return

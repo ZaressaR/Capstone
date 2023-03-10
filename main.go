@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"html/template"
 	"log"
-	"net/http"
 	"time"
 
 	db "github.com/ZaressaR/Capstone/db/sqlc"
@@ -109,66 +108,24 @@ func main() {
 		c.HTML(200, "medicationList.gohtml", data)
 	})
 
-	r.POST("/medication", func(c *gin.Context) {
-		rxname := c.PostForm("rxname")
-		firstName := c.PostForm("firstName")
-		lastName := c.PostForm("lastName")
-		administeredStr := c.PostForm("date")
-		administered, err := time.Parse("Monday", administeredStr)
-
-		medication := db.CreateMedicationParams{
-			RxName:       rxname,
-			Administered: administered,
-		}
-		medicationRecord, err := rx.CreateMedication(ctx, medication)
-		if err != nil {
-			c.AbortWithError(500, err)
-
-			return
-		}
-		patient := db.CreatePatientParams{
-			FirstName: firstName,
-			LastName:  lastName,
-		}
-		patientRecord, err := rx.CreatePatient(ctx, patient)
-		if err != nil {
-			c.AbortWithError(500, err)
-
-			return
-		}
-
-		data := struct {
-			Patient    db.Patient
-			Medication []db.Medication
-			Submitted  bool
-		}{
-			Patient:    patientRecord,
-			Medication: []db.Medication{medicationRecord},
-			Submitted:  true,
-		}
-
-		c.HTML(200, "medicationList.gohtml", data)
-	})
-
 	r.DELETE("/patient/:firstName", func(c *gin.Context) {
-		firstName := c.PostForm("firstName")
-		lastName := c.PostForm("lastName")
+		method := c.Query("_method")
+		if method == "DELETE" {
+			firstName := c.Param("firstName")
+			err := rx.DeletePatient(ctx, firstName)
+			if err != nil {
+				c.AbortWithError(500, err)
 
-		patient := db.DeletePatientParams{
-			FirstName: firstName,
-			LastName:  lastName,
+				return
+			}
+			method := c.Query("_method")
+			if method == "DELETE" {
+
+				c.HTML(200, "success.gohtml", method)
+
+			}
 		}
-		err := rx.DeletePatient(ctx, patient)
-		if err != nil {
-			c.AbortWithError(500, err)
-
-		}
-
-		c.Redirect(http.StatusSeeOther, "success.gohtml")
 	})
-
-	// r.GET("/medication", func(c *gin.Context) {
-	// 	c.HTML(200, "medicationList.gohtml", nil)
 
 	if err := r.Run(serverAddress); err != nil {
 		log.Fatal("cannot start server:", err)

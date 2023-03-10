@@ -49,14 +49,14 @@ type CreatePatientRoutineParams struct {
 	FirstName    string    `json:"firstName" binding:"required"`
 	LastName     string    `json:"lastName" binding:"required"`
 	RxName       string    `json:"rxname" binding:"required"`
-	Administered time.Time `form: "administered" binding:"required" time_format:"weekday"`
+	Administered time.Time `json:"administered" binding:"required"`
 }
 
 type CreatePatientRoutineResults struct {
 	FirstName    Patient    `json:"firstName"`
 	LastName     Patient    `json:"lastName"`
 	RxName       Medication `json:"rxname"`
-	Administered time.Time  `form: "administered" binding:"required" time_format:"weekday"`
+	Administered time.Time  `json:"administered"`
 }
 
 func (q *RX) CreatePatientRoutine(ctx context.Context, arg CreatePatientRoutineParams) (CreatePatientRoutineResults, error) {

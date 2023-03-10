@@ -31,15 +31,21 @@ func (q *Queries) CreatePatient(ctx context.Context, arg CreatePatientParams) (P
 }
 
 const deletePatient = `-- name: DeletePatient :exec
-DELETE FROM patient WHERE first_name = $1 AND last_name = $2
+DELETE FROM patient WHERE first_name = $1
 `
 
-type DeletePatientParams struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+func (q *Queries) DeletePatient(ctx context.Context, firstName string) error {
+	_, err := q.db.ExecContext(ctx, deletePatient, firstName)
+	return err
 }
 
-func (q *Queries) DeletePatient(ctx context.Context, arg DeletePatientParams) error {
-	_, err := q.db.ExecContext(ctx, deletePatient, arg.FirstName, arg.LastName)
-	return err
+const getPatient = `-- name: GetPatient :one
+SELECT patient_id, first_name, last_name FROM patient WHERE first_name = $1
+`
+
+func (q *Queries) GetPatient(ctx context.Context, firstName string) (Patient, error) {
+	row := q.db.QueryRowContext(ctx, getPatient, firstName)
+	var i Patient
+	err := row.Scan(&i.PatientID, &i.FirstName, &i.LastName)
+	return i, err
 }

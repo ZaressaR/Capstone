@@ -7,8 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Medication represents a row in medication table.
-
 type Server struct {
 	RX     *db.RX
 	router *gin.Engine
@@ -23,7 +21,7 @@ func NewServer(rx *db.RX) *Server {
 	router.POST("/medicationList", server.createMedication)
 	router.POST("/medication", server.createMedication)
 	router.GET("/medication", server.createMedication)
-	router.DELETE("/patient/firstName", server.deletePatient)
+	router.DELETE("/patient/:firstName", server.deletePatient)
 
 	server.router = router
 	return server
@@ -52,17 +50,6 @@ func setupRoutes(r *gin.Engine, db *gorm.DB) {
 	r.POST("/medication", HandlerFunc)
 	r.DELETE("/patient", patientPostHandler)
 
-	// r.Use(connectDB(db)
-	// r.GET("/patients", getPatients)
-	// r.GET("/patients/:id", getPatient)
-	// r.POST("/patients", createPatient)
-	// r.PUT("/patients/:id", updatePatient)
-	// r.DELETE("/patients/:id", deletePatient)
-	// r.GET("/medications", getMedications)
-	// r.GET("/medications/:id", getMedication)
-	// r.POST("/medications", createMedication)
-	// r.PUT("/medications/:id", updateMedication)
-	// r.DELETE("/medications/:id", deleteMedication)
 }
 
 func patientPostHandler(c *gin.Context) {
@@ -78,15 +65,6 @@ func patientPostHandler(c *gin.Context) {
 func patientGetHandler(c *gin.Context) {
 	c.HTML(200, "index.gohtml", gin.H{})
 }
-
-// func medicationPostHandler(c *gin.Context) {
-// 	person := &db.CreateMedicationParams{}
-// 	if err := c.ShouldBindJSON(person); err != nil {
-// 		c.JSON(400, errorRespone(err))
-// 		return
-// 	}
-// 	c.JSON(200, person)
-// }
 
 func HandlerFunc(c *gin.Context) {
 	data := []db.Medication{}

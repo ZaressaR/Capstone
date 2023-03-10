@@ -9,3 +9,6 @@ INSERT INTO patient(
 
 -- name: DeletePatient :exec
 DELETE FROM patient WHERE first_name = $1;
+
+-- name: GetPatient :one
+SELECT * FROM patient WHERE first_name = $1;

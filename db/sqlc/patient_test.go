@@ -22,34 +22,26 @@ func createPatientProfile(t *testing.T) Patient {
 
 }
 
-// func TestCreatePatient(t *testing.T) {
-// 	createPatientProfile(t)
-// }
-
-// func TestGetPatient(t *testing.T) {
-// 	patient := createPatientProfile(t)
-
-// 	patient.PatientID = 1
-
-// 	patient1, err := testQueries.GetPatient(ctx, patient.PatientID)
-
-// 	require.NoError(t, err)
-// 	require.NotEmpty(t, patient)
-
-// }
-
 func TestCreatePatientProfile(t *testing.T) {
 	createPatientProfile(t)
 }
 
 func TestDeletePatient(t *testing.T) {
-	arg := DeletePatientParams{
-		FirstName: "",
-		LastName:  "",
-	}
+	patient := createPatientProfile(t)
 
-	err := testQueries.DeletePatient(ctx, arg)
+	err := testQueries.DeletePatient(ctx, patient.FirstName)
 
 	require.NoError(t, err)
+	require.NotEmpty(t, patient)
+
+}
+
+func TestGetPatient(t *testing.T) {
+	patient := createPatientProfile(t)
+
+	patient1, err := testQueries.GetPatient(ctx, patient.FirstName)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, patient1)
 
 }
